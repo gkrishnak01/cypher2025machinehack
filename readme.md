@@ -13,7 +13,7 @@ It leverages **Groq API** for ultra-fast inference, enabling **cars (agents)** t
 - **Environmental impact**: wasted fuel & CO₂ emissions.  
 - **Economic loss**: billions lost yearly due to inefficiency.
 
-⚡ *Solving Bangalore’s traffic problem means saving lives, money, and the environment. Route AI is a step toward that future.*
+⚡ *Solving Bangalore’s traffic problem means saving lives, money, and the environment. Route AI is a step toward that future*
 
 ---
 
