@@ -51,7 +51,7 @@ Each **car = an agent** with its own AI-powered brain.
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/your-username/route-ai.git
+git clone https://github.com/gkrishnak01/route-ai.git
 cd route-ai
 ```
 
@@ -69,7 +69,7 @@ GROQ_MODEL=gemma-7b
 
 ### 4. Run the server
 ```bash
-uvicorn main:app --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### 5. Demo Simulation
