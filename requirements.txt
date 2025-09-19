@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic
+websockets
+langchain-core
+autogen
+groq
+python-dotenv
+networkx      
