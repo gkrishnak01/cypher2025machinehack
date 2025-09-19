@@ -7,6 +7,9 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 from starlette.websockets import WebSocketState
 
+
+from utils import makeHumanLangOp
+
 from dotenv import load_dotenv
 
 # ------------------------------------------------------------------
@@ -22,6 +25,9 @@ app = FastAPI(
     title="Route AI Backend",
     description="MVP for agent‑to‑agent route optimisation",
 )
+
+test = makeHumanLangOp()
+print(test)
 
 # In‑memory stores
 agents: Dict[str, AgentState] = {}
@@ -110,6 +116,8 @@ async def optimise_endpoint():
                 if aid == agent_id and ws.application_state == WebSocketState.CONNECTED:
                     payload = {"type": "route", "route": upd}
                     await ws.send_json(payload)
+
+
 
     return JSONResponse({"status": "optimised", "agents": list(agents.keys())})
 
