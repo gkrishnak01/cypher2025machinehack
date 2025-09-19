@@ -1,26 +1,62 @@
 # agent.py
-from pydantic import BaseModel
-from typing import List, Dict
+"""
+Agent module for Route AI.
+Defines the AgentState and Route models, along with route planning logic.
+"""
+
+from __future__ import annotations
+from pydantic import BaseModel, Field, validator
+from typing import List, Dict, Optional
 import uuid
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Route(BaseModel):
-    id: str
-    waypoints: List[Dict[str, float]]  # [{"lat":..., "lon":...}, ...]
+    """
+    Represents a planned route for an agent.
+    """
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    waypoints: List[Dict[str, float]]  # Each waypoint: {"lat": float, "lon": float}
+
+    @validator('waypoints')
+    def validate_waypoints(cls, v):
+        if not v:
+            raise ValueError("Route must have at least one waypoint")
+        for point in v:
+            if 'lat' not in point or 'lon' not in point:
+                raise ValueError("Each waypoint must contain 'lat' and 'lon'")
+        return v
+
 
 class AgentState(BaseModel):
-    id: str
-    location: Dict[str, float]
-    destination: Dict[str, float]
-    route: Route | None = None
-    neighbours: List[str] = []  # IDs of nearby agents
+    """
+    Represents the state of an agent (vehicle) in the system.
+    """
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    location: Dict[str, float] = Field(..., description="Current location as {'lat': float, 'lon': float}")
+    destination: Dict[str, float] = Field(..., description="Destination as {'lat': float, 'lon': float}")
+    route: Optional[Route] = None
+    neighbours: List[str] = Field(default_factory=list, description="IDs of nearby agents")
+
+    @validator('location', 'destination')
+    def validate_coordinates(cls, value: Dict[str, float]):
+        if 'lat' not in value or 'lon' not in value:
+            raise ValueError("Both 'lat' and 'lon' must be provided")
+        if not isinstance(value['lat'], (float, int)) or not isinstance(value['lon'], (float, int)):
+            raise ValueError("'lat' and 'lon' must be numeric")
+        return value
 
     def plan_route(self) -> Route:
         """
-        Very naive “straight‑line” route generator. In practice this would be
-        a routing algorithm (OSRM / GraphHopper / custom Dijkstra).
+        Generate a naive straight-line route from current location to destination.
+        In production, replace with a proper routing algorithm (OSRM / GraphHopper / Dijkstra).
         """
         waypoints = [
             {"lat": self.location["lat"], "lon": self.location["lon"]},
             {"lat": self.destination["lat"], "lon": self.destination["lon"]},
         ]
-        return Route(id=str(uuid.uuid4()), waypoints=waypoints)
+        route = Route(waypoints=waypoints)
+        logger.debug("Planned route for agent %s: %s", self.id, route)
+        return route
