@@ -10,7 +10,7 @@ load_dotenv()
 
 
 API_KEY = os.getenv("GROQ_API_KEY")
-MODEL = os.getenv("GROQ_MODEL", "gemma-7b")
+MODEL = os.getenv("GROQ_MODEL")
 
 client = Groq(api_key=API_KEY)
 

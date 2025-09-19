@@ -64,7 +64,7 @@ pip install -r requirements.txt
 Create a `.env` file:
 ```
 GROQ_API_KEY=your_api_key_here
-GROQ_MODEL=gemma-7b
+GROQ_MODEL=model name
 ```
 
 ### 4. Run the server
